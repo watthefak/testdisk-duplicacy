@@ -130,6 +130,8 @@ static const file_recovery_t *dupl_carry_owner = NULL;
   @*/
 static data_check_t data_check_dupl(const unsigned char *buffer, const unsigned int buffer_size, file_recovery_t *file_recovery)
 {
+    log_info("dupl: data_check called, file_size=%llu buffer_size=%u\n",
+         (unsigned long long)file_recovery->file_size, buffer_size);
   /* buffer[0 .. buffer_size) corresponds to absolute file offsets
      [window_start, window_start + buffer_size), where window_start is
      file_recovery->file_size - buffer_size/2 (PhotoRec keeps the buffer
@@ -169,6 +171,8 @@ static data_check_t data_check_dupl(const unsigned char *buffer, const unsigned 
         file_recovery->calculated_file_size = dupl_carry_abs_start + k;
         dupl_carry_len = 0;
         dupl_carry_owner = NULL;
+          log_info("dupl: DC_STOP at calculated_file_size=%llu\n",
+         (unsigned long long)file_recovery->calculated_file_size);
         return DC_STOP;
       }
       if(k + sizeof(dupl_magic) <= seam_len &&
@@ -177,6 +181,8 @@ static data_check_t data_check_dupl(const unsigned char *buffer, const unsigned 
         file_recovery->calculated_file_size = dupl_carry_abs_start + k + DUPL_FOOTER_LEN;
         dupl_carry_len = 0;
         dupl_carry_owner = NULL;
+          log_info("dupl: DC_STOP at calculated_file_size=%llu\n",
+         (unsigned long long)file_recovery->calculated_file_size);
         return DC_STOP;
       }
     }
@@ -206,6 +212,8 @@ static data_check_t data_check_dupl(const unsigned char *buffer, const unsigned 
           file_recovery->calculated_file_size = window_start + i;
           dupl_carry_len = 0;
           dupl_carry_owner = NULL;
+            log_info("dupl: DC_STOP at calculated_file_size=%llu\n",
+         (unsigned long long)file_recovery->calculated_file_size);
           return DC_STOP;
         }
         if(i + sizeof(dupl_magic) <= buffer_size &&
@@ -214,6 +222,8 @@ static data_check_t data_check_dupl(const unsigned char *buffer, const unsigned 
           file_recovery->calculated_file_size = window_start + i + DUPL_FOOTER_LEN;
           dupl_carry_len = 0;
           dupl_carry_owner = NULL;
+            log_info("dupl: DC_STOP at calculated_file_size=%llu\n",
+         (unsigned long long)file_recovery->calculated_file_size);
           return DC_STOP;
         }
       }
@@ -265,6 +275,7 @@ static int header_check_dupl(const unsigned char *buffer, const unsigned int buf
     file_recovery_new->data_check = &data_check_dupl;
     file_recovery_new->file_check = &file_check_size_max;
   }
+    log_info("dupl: HEADER MATCH, blocksize=%llu\n", (long long unsigned)file_recovery_new->blocksize);
   return 1;
 }
 
