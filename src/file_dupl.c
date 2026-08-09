@@ -9,13 +9,13 @@
    Recovers Duplicacy backup chunk files.
 
    File layout:
-     HEADER = PRE_HEADER(9 bytes "duplicacy") + PADDING(6 random bytes) + MAGIC(8 bytes)
+     HEADER = PRE_HEADER(9 bytes "duplicacy") + PADDING(5 random bytes) + MAGIC(8 bytes)
      ... file data ...
      FOOTER = MAGIC(8 bytes) + 2 random bytes
 
    Strategy:
      - header_check_dupl() matches the fixed PRE_HEADER at offset 0 and the
-       fixed MAGIC at offset 15 (skipping the 6 random padding bytes between
+       fixed MAGIC at offset 14 (skipping the 5 random padding bytes between
        them, which are never compared).
      - data_check_dupl() is PhotoRec's standard mechanism for formats whose
        length isn't known from the header: it's called repeatedly as more of
@@ -33,7 +33,7 @@
        ambiguity with no backward lookback: whichever of the two patterns
        is encountered FIRST tells us which case we're in.
          - PRE_HEADER found first  => this is unambiguously the start of
-           the next file's header (its own MAGIC, 15 bytes further in,
+           the next file's header (its own MAGIC, 14 bytes further in,
            doesn't need to be located at all). The current file has no
            footer within the scanned data; it ends here, bounded by the
            next header -- the same fallback PhotoRec normally uses when a
@@ -106,8 +106,8 @@ static const unsigned char dupl_pre_header[9] =
 static const unsigned char dupl_magic[8] =
   { 0x00,0x00,0x00,0x00,0x63,0x00,0x01,0x00 };
 
-#define DUPL_PADDING_LEN 6
-#define DUPL_HEADER_LEN  (sizeof(dupl_pre_header) + DUPL_PADDING_LEN + sizeof(dupl_magic)) /* 23 */
+#define DUPL_PADDING_LEN 5
+#define DUPL_HEADER_LEN  (sizeof(dupl_pre_header) + DUPL_PADDING_LEN + sizeof(dupl_magic)) /* 22 */
 #define DUPL_FOOTER_LEN  (sizeof(dupl_magic) + 2)                                          /* 10 */
 
 #define DUPL_CARRY_LEN 32
@@ -182,7 +182,7 @@ static data_check_t data_check_dupl(const unsigned char *buffer, const unsigned 
     }
   }
 
-  /* Never search inside the header itself (bytes 15..23 of the file are
+  /* Never search inside the header itself (bytes 14..22 of the file are
      the header's own copy of MAGIC and must not be mistaken for a footer). */
   {
     uint64_t search_from = window_start;
@@ -253,7 +253,7 @@ static int header_check_dupl(const unsigned char *buffer, const unsigned int buf
     return 0;
   if(memcmp(buffer, dupl_pre_header, sizeof(dupl_pre_header)) != 0)
     return 0;
-  /* bytes [9,15) are the random PADDING and are intentionally not checked */
+  /* bytes [9,14) are the random PADDING and are intentionally not checked */
   if(memcmp(&buffer[sizeof(dupl_pre_header)+DUPL_PADDING_LEN], dupl_magic, sizeof(dupl_magic)) != 0)
     return 0;
 
