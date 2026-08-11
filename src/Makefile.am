@@ -138,7 +138,7 @@ file_C			= filegen.c \
 			  file_dst.c \
 			  file_dta.c \
 			  file_dump.c \
-			  file_dupl.c \
+			  file_duplicacy.c \
 			  file_dv.c \
 			  file_dvi.c \
 			  file_dvr.c \
