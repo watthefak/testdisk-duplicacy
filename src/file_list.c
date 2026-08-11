@@ -292,8 +292,8 @@ extern const file_hint_t file_hint_dta;
 #if !defined(SINGLE_FORMAT) || defined(SINGLE_FORMAT_dump)
 extern const file_hint_t file_hint_dump;
 #endif
-#if !defined(SINGLE_FORMAT) || defined(SINGLE_FORMAT_dupl)
-extern const file_hint_t file_hint_dupl;
+#if !defined(SINGLE_FORMAT) || defined(SINGLE_FORMAT_duplicacy)
+extern const file_hint_t file_hint_duplicacy;
 #endif
 #if !defined(SINGLE_FORMAT) || defined(SINGLE_FORMAT_dv)
 extern const file_hint_t file_hint_dv;
@@ -1322,9 +1322,6 @@ file_enable_t array_file_enable[]=
 #if !defined(SINGLE_FORMAT) || defined(SINGLE_FORMAT_dmp)
   { .enable=0, .file_hint=&file_hint_dmp  },
 #endif
-#if !defined(SINGLE_FORMAT) || defined(SINGLE_FORMAT_dupl)
-  { .enable=0, .file_hint=&file_hint_dupl  },
-#endif
 #if !defined(SINGLE_FORMAT) || defined(SINGLE_FORMAT_drw)
   { .enable=0, .file_hint=&file_hint_drw  },
 #endif
@@ -1360,6 +1357,9 @@ file_enable_t array_file_enable[]=
 #endif
 #if !defined(SINGLE_FORMAT) || defined(SINGLE_FORMAT_dump)
   { .enable=0, .file_hint=&file_hint_dump },
+#endif
+#if !defined(SINGLE_FORMAT) || defined(SINGLE_FORMAT_duplicacy)
+  { .enable=0, .file_hint=&file_hint_duplicacy  },
 #endif
 #if !defined(SINGLE_FORMAT) || defined(SINGLE_FORMAT_dv)
   { .enable=0, .file_hint=&file_hint_dv   },
